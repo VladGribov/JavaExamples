@@ -1,0 +1,53 @@
+Identifiers
+
+	what? - It's a user defined name to identify class name, variable name & method name
+
+	why? - We need to identify class, method, variable in java uniquely
+
+	Rules:
+
+		1) Allow chat 0-9, a-z, $, _
+		2) Case sensitive
+		3) Can't use keywords
+		4) Can't start with digits
+
+		Valid   : _a_, abc123, num_1
+		Invalid : 1num, num 1, num-1
+DataTypes:
+
+	What?	- It's a type of data we want to store in a variable
+
+	Why?	- We need to specify which type of data we need to store in a variable
+
+	Data Types:
+		Primitive	Non Primitive
+
+		byte		String
+		short
+		int
+		long
+		float
+		double
+		char
+		boolean
+
+	Primitive	- It's a direct value
+	Non Primitive	- It's an object
+
+Variables:
+
+	What?	- It's a container for storing data. Reference to a memory where we are storing data
+
+	Why?	- We need to store data during the program so variable will help to crate container for that data.
+
+	1) Declaration of variable
+
+		int num1;
+
+	2) Assigning value to variable
+
+		num1 = 10;
+
+	3) Declaration and Initialization
+
+		int num1 = 10;
