@@ -679,8 +679,8 @@ Note: Math.abs(num) computes the absolute value of a number.
     //return true if array has 2 or more of the same value
     //I used 2 maps in here can use 1
     public Map<String, Boolean> wordMultiple(String[] strings) {
-        Map<String, Integer> count = new HashMap<String, Integer>();
-        Map<String, Boolean> bool = new HashMap<String, Boolean>();
+        Map<String, Integer> count = new HashMap();
+        Map<String, Boolean> bool = new HashMap();
         //if string appears 2 or more times add strung true
         //count the strings and amount of keys
         //if we haven't seen the sting before add it with value 1
@@ -704,11 +704,11 @@ Note: Math.abs(num) computes the absolute value of a number.
         return bool;
     }
 
-    /*
-    Consider the leftmost and rightmost appearances of some value in an array.
-    We'll say that the "span" is the number of elements between the two inclusive.
-    A single value has a span of 1.
-    Returns the largest span found in the given array. (Efficiency is not a priority.)
+    /**
+     * Consider the leftmost and rightmost appearances of some value in an array.
+     * We'll say that the "span" is the number of elements between the two inclusive.
+     * A single value has a span of 1.
+     * Returns the largest span found in the given array. (Efficiency is not a priority.)
      */
     public int maxSpan(int[] nums) {
         //check greatest length between 1st value and last occurence
@@ -744,12 +744,12 @@ Note: Math.abs(num) computes the absolute value of a number.
         }
     }
 
-    /*
-    Return an array that contains exactly the same numbers as the given array,
-    but rearranged so that every 3 is immediately followed by a 4.
-    Do not move the 3's, but every other number may move.
-    The array contains the same number of 3's and 4's, every 3 has a number after it that is not a 3,
-    and a 3 appears in the array before any 4.
+    /**
+     * Return an array that contains exactly the same numbers as the given array,
+     * but rearranged so that every 3 is immediately followed by a 4.
+     * Do not move the 3's, but every other number may move.
+     * The array contains the same number of 3's and 4's, every 3 has a number after it that is not a 3,
+     * and a 3 appears in the array before any 4.
      */
     public int[] fix34(int[] nums) {
         //figure out where the 3's are and what the numbers after them are
@@ -772,12 +772,12 @@ Note: Math.abs(num) computes the absolute value of a number.
         return nums;
     }
 
-    /*
-    Return an array that contains exactly the same numbers as the given array,
-    but rearranged so that every 4 is immediately followed by a 5.
-    Do not move the 4's, but every other number may move.
-    The array contains the same number of 4's and 5's, and every 4 has a number after it that is not a 4.
-    In this version, 5's may appear anywhere in the original array.
+    /**
+     * Return an array that contains exactly the same numbers as the given array,
+     * but rearranged so that every 4 is immediately followed by a 5.
+     * Do not move the 4's, but every other number may move.
+     * The array contains the same number of 4's and 5's, and every 4 has a number after it that is not a 4.
+     * In this version, 5's may appear anywhere in the original array.
      */
 
     public int[] fix45(int[] nums) {
@@ -815,12 +815,12 @@ Note: Math.abs(num) computes the absolute value of a number.
         return s;
     }
 
-    /*
-    You are given a large integer represented as an integer array digits,
-    where each digits[i] is the ith digit of the integer.
-    The digits are ordered from most significant to least significant in left-to-right order.
-    The large integer does not contain any leading 0's.
-    Increment the large integer by one and return the resulting array of digits.
+    /**
+     * You are given a large integer represented as an integer array digits,
+     * where each digits[i] is the ith digit of the integer.
+     * The digits are ordered from most significant to least significant in left-to-right order.
+     * The large integer does not contain any leading 0's.
+     * Increment the large integer by one and return the resulting array of digits.
      */
     public int[] plusOne(int[] digits) {
         //add 1 to last place if 9 last place is 0 2nd 2 last is add one so on
@@ -851,30 +851,31 @@ Note: Math.abs(num) computes the absolute value of a number.
         return digits;
     }
 
-    /*
-    Write an algorithm to determine if a number n is happy.
-
-A happy number is a number defined by the following process:
-
-    Starting with any positive integer, replace the number by the sum of the squares of its digits.
-    Repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1.
-    Those numbers for which this process ends in 1 are happy.
-
-Return true if n is a happy number, and false if not.
+    /**
+     * Write an algorithm to determine if a number n is happy.
+     * <p>
+     * A happy number is a number defined by the following process:
+     * <p>
+     * Starting with any positive integer, replace the number by the sum of the squares of its digits.
+     * Repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1.
+     * Those numbers for which this process ends in 1 are happy.
+     * <p>
+     * Return true if n is a happy number, and false if not.
      */
     public boolean isHappy(int n) {
         List<Integer> newList = new ArrayList<>();
         int sum = 0;
-        while(sum != 1){
+        while (sum != 1) {
             sum = 0;
-            while(n > 0){
-                //23
-                int last = n%10;
-                sum = sum + (last)*(last);
-                n = n/10;
+            while (n > 0) {
+                //23  13 10
+                int last = n % 10;
+                sum = sum + (last) * (last);
+                n = n / 10;
             }
             n = sum;
-            if(newList.contains(n)){
+            System.out.println(n);
+            if (newList.contains(n)) {
                 return false;
             } else {
                 newList.add(n);
@@ -882,15 +883,89 @@ Return true if n is a happy number, and false if not.
         }
         return true;
     }
-    //test
+
+    /**
+     * Given an integer n, return a string array answer (1-indexed) where:
+     * <p>
+     * answer[i] == "FizzBuzz" if i is divisible by 3 and 5.
+     * answer[i] == "Fizz" if i is divisible by 3.
+     * answer[i] == "Buzz" if i is divisible by 5.
+     * answer[i] == i (as a string) if none of the above conditions are true.
+     */
+    public List<String> fizzBuzz(int n) {
+        List<String> answer = new ArrayList<>();
+        for (int i = 0; i <= n - 1; i++) {
+            if ((i + 1) % 3 == 0 && (i + 1) % 5 == 0) {
+                answer.add("FizzBuzz");
+            } else if ((i + 1) % 3 == 0) {
+                answer.add("Fizz");
+            } else if ((i + 1) % 5 == 0) {
+                answer.add("Buzz");
+            } else {
+                answer.add(i + 1 + "");
+            }
+        }
+        return answer;
+    }
+
+    public char findTheDifference(String s, String t) {
+        Map<Character, Integer> newMap = new HashMap<>();
+        Map<Character, Integer> original = new HashMap<>();
+        for (int i = 0; i < t.length(); i++) {
+            if(!newMap.containsKey(t.charAt(i))){
+                newMap.put(t.charAt(i), 1);
+            } else {
+                newMap.put(t.charAt(i), 1 + newMap.get(t.charAt(i)));
+            }
+        }
+        for(int i = 0; i < s.length(); i++){
+            if(!original.containsKey(s.charAt(i))){
+                original.put(s.charAt(i), 1);
+            } else {
+                original.put(s.charAt(i), 1 + original.get(s.charAt(i)));
+            }
+        }
+        char a = ' ';
+        for(Map.Entry<Character, Integer> set: newMap.entrySet()){
+            if(original.containsKey(set.getKey())){
+                if(!original.get(set.getKey()).equals(set.getValue())) {
+                    a = set.getKey();
+                }
+            } else {
+                a = set.getKey();
+            }
+        }
+        return a;
+    }
+    //Alternate way to do problem above^
+    public char findTheDifference2(String s, String t) {
+        int[] freq = new int[26];
+        for(char c : s.toCharArray()) {
+            freq[c - 'a']++;
+        }
+
+        for(char c : t.toCharArray()) {
+            if(freq[c - 'a'] == 0){
+                return c;
+            }
+            freq[c - 'a']--;
+        }
+        return 'a';
+    }
+
+
     //main
     public static void main(String[] args) {
         PracticeMethods practice = new PracticeMethods();
-        int[] arr = new int[]{9, 8, 5, 3, 4, 5, 6, 7, 9};
+        int[] arr = new int[]{2, 5, 4, 6, 4, 2, 6, 5, 4, 2, 5};
+        char[] str = {'S', 'a', 's', 'h', 'a'};
+        System.out.println(Arrays.toString(practice.fix45(arr)));
+        // System.out.println(Arrays.toString(practice.reverseString(str)));
+        //System.out.println(Arrays.toString(practice.plusOne(arr)));
 
-        System.out.println(Arrays.toString(practice.plusOne(arr)));
-
-        System.out.println(practice.isHappy(19));
+        //  System.out.println(practice.isHappy(50));
+        System.out.println(practice.fizzBuzz(15));
+        System.out.println(practice.findTheDifference("abc", "cbab"));
 
 
     }
