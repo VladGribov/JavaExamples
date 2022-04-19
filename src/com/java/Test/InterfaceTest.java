@@ -22,9 +22,7 @@ class MyCalculator implements AdvancedArithmetic{
     //print out prime numbers below the inputted value
     @Override
     public List<Integer> find_prime(int n){
-        List<Integer> list = new ArrayList<Integer>();
-        //check each number individually
-        //prime numbers are whole numbers greater than 1, that have only two factors – 1 and the number itself.
+        List<Integer> list = new ArrayList();
         for(int i=2; i<=n; i++){
             //2nd loop
             boolean isPrime = true;
