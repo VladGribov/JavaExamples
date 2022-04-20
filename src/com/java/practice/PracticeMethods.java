@@ -912,23 +912,23 @@ Note: Math.abs(num) computes the absolute value of a number.
         Map<Character, Integer> newMap = new HashMap<>();
         Map<Character, Integer> original = new HashMap<>();
         for (int i = 0; i < t.length(); i++) {
-            if(!newMap.containsKey(t.charAt(i))){
+            if (!newMap.containsKey(t.charAt(i))) {
                 newMap.put(t.charAt(i), 1);
             } else {
                 newMap.put(t.charAt(i), 1 + newMap.get(t.charAt(i)));
             }
         }
-        for(int i = 0; i < s.length(); i++){
-            if(!original.containsKey(s.charAt(i))){
+        for (int i = 0; i < s.length(); i++) {
+            if (!original.containsKey(s.charAt(i))) {
                 original.put(s.charAt(i), 1);
             } else {
                 original.put(s.charAt(i), 1 + original.get(s.charAt(i)));
             }
         }
         char a = ' ';
-        for(Map.Entry<Character, Integer> set: newMap.entrySet()){
-            if(original.containsKey(set.getKey())){
-                if(!original.get(set.getKey()).equals(set.getValue())) {
+        for (Map.Entry<Character, Integer> set : newMap.entrySet()) {
+            if (original.containsKey(set.getKey())) {
+                if (!original.get(set.getKey()).equals(set.getValue())) {
                     a = set.getKey();
                 }
             } else {
@@ -937,55 +937,117 @@ Note: Math.abs(num) computes the absolute value of a number.
         }
         return a;
     }
+
     //Alternate way to do problem above^
     public char findTheDifference2(String s, String t) {
         int[] freq = new int[26];
-        for(char c : s.toCharArray()) {
+        for (char c : s.toCharArray()) {
             freq[c - 'a']++;
         }
 
-        for(char c : t.toCharArray()) {
-            if(freq[c - 'a'] == 0){
+        for (char c : t.toCharArray()) {
+            if (freq[c - 'a'] == 0) {
                 return c;
             }
             freq[c - 'a']--;
         }
         return 'a';
     }
-/**
-Given a string s, find the first non-repeating character in it and return its index.
-If it does not exist, return -1.
- */
-public int firstUniqChar(String s) {
-    for(int i = 0; i <s.length(); i++){
-        boolean unique = true;
-        for(int x = i+1; x <s.length(); x++){
-            if(s.charAt(i) == s.charAt(x)){
-                unique = false;
+
+    /**
+     * Given a string s, find the first non-repeating character in it and return its index.
+     * If it does not exist, return -1.
+     */
+    public int firstUniqChar(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            boolean unique = true;
+            for (int x = i + 1; x < s.length(); x++) {
+                if (s.charAt(i) == s.charAt(x)) {
+                    unique = false;
+                }
+            }
+            if (unique) {
+                return i;
+            }
+        } //something is wrong with this fix it
+        return -1;
+    }
+
+    static int closestPrime(int n) {
+        int closest = 0;
+        //return 1 if n <= 1
+        if (n <= 1) {
+            return 1;
+        }
+
+        //check if n is prime
+        boolean nPrime = true;
+        for (int i = 2; i < n; i++) {
+            if (n % i == 0) {
+                //nPrime = false if n % i ==0
+                nPrime = false;
+                break;
             }
         }
-        if(unique){
-            return i;
+        //if nPrime is true return n
+        if (nPrime) {
+            return n;
         }
-    } //something is wrong with this fix it
-    return -1;
-}
+
+        //check lower prime
+        int lowerP = -1;
+        for (int i = n - 1; i >= 3; i--) {
+            //check if i is prime
+            boolean lPrime = true;
+            for (int x = 2; x < i; x++) {
+                if (i % x == 0) {
+                    lPrime = false;
+                    break;
+                }
+            }
+            if (lPrime) {
+                lowerP = i;
+                break;
+            }
+        }
+
+        //check upper prime
+        int upperP = Integer.MAX_VALUE; //2147483647 is a prime number but upperP can be anything here.
+        for (int i = n + 1; i < Integer.MAX_VALUE; i++) {
+            //check if i is prime
+            boolean uPrime = true;
+            for (int x = 2; x < i; x++) {
+                if (i % x == 0) {
+                    uPrime = false;
+                    break;
+                }
+            }
+            if (uPrime) {
+                upperP = i;
+                break;
+            }
+        }
+        //Math.abs() is the absolute value which is always even
+        int diffL = Math.abs(n - lowerP);
+        int diffU = Math.abs(n - upperP);
+        if (diffL > diffU) {
+            closest = upperP;
+        } else if (diffL < diffU) {
+            closest = lowerP;
+        } else if (lowerP == -1) {
+            closest = upperP;
+        } else { //upperP == lowerP
+            System.out.println(n + " is the same distance away from " + lowerP + " and " + upperP);
+            closest = upperP; //returns the higher value
+        }
+        return closest;
+    }
 
     //main
     public static void main(String[] args) {
-        PracticeMethods practice = new PracticeMethods();
-        String a = "aabb";
-        System.out.println(practice.firstUniqChar(a));
-        int[] arr = new int[]{2, 5, 4, 6, 4, 2, 6, 5, 4, 2, 5};
-        char[] str = {'S', 'a', 's', 'h', 'a'};
-        System.out.println(Arrays.toString(practice.fix45(arr)));
-        // System.out.println(Arrays.toString(practice.reverseString(str)));
-        //System.out.println(Arrays.toString(practice.plusOne(arr)));
-
-        //  System.out.println(practice.isHappy(50));
-        System.out.println(practice.fizzBuzz(15));
-        System.out.println(practice.findTheDifference("abc", "cbab"));
-
-
+        System.out.println(closestPrime(278355));
+        System.out.println(closestPrime(12345124));
+        System.out.println(closestPrime(-100));
+        System.out.println(closestPrime(Integer.MAX_VALUE));
     }
 }
