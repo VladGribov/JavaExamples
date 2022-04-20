@@ -952,11 +952,30 @@ Note: Math.abs(num) computes the absolute value of a number.
         }
         return 'a';
     }
-
+/**
+Given a string s, find the first non-repeating character in it and return its index.
+If it does not exist, return -1.
+ */
+public int firstUniqChar(String s) {
+    for(int i = 0; i <s.length(); i++){
+        boolean unique = true;
+        for(int x = i+1; x <s.length(); x++){
+            if(s.charAt(i) == s.charAt(x)){
+                unique = false;
+            }
+        }
+        if(unique){
+            return i;
+        }
+    } //something is wrong with this fix it
+    return -1;
+}
 
     //main
     public static void main(String[] args) {
         PracticeMethods practice = new PracticeMethods();
+        String a = "aabb";
+        System.out.println(practice.firstUniqChar(a));
         int[] arr = new int[]{2, 5, 4, 6, 4, 2, 6, 5, 4, 2, 5};
         char[] str = {'S', 'a', 's', 'h', 'a'};
         System.out.println(Arrays.toString(practice.fix45(arr)));

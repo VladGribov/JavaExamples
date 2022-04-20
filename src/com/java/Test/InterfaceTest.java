@@ -22,9 +22,8 @@ class MyCalculator implements AdvancedArithmetic{
     //print out prime numbers below the inputted value
     @Override
     public List<Integer> find_prime(int n){
-        List<Integer> list = new ArrayList();
+        List<Integer> list = new ArrayList<>();
         for(int i=2; i<=n; i++){
-            //2nd loop
             boolean isPrime = true;
             for(int x = 2; x<=i-1; x++){
                 if(i%x==0){
@@ -38,12 +37,10 @@ class MyCalculator implements AdvancedArithmetic{
         }
     return list;
     }
-
-
 }
 public class InterfaceTest {
     public static void main(String[] args) {
         MyCalculator calc = new MyCalculator();
-        System.out.println(calc.find_prime(600000));
+        System.out.println(calc.find_prime(50));
     }
 }

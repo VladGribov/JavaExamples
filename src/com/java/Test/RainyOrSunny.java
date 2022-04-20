@@ -2,7 +2,7 @@ package com.java.Test;
 
 import java.util.Scanner;
 
-public class asf {
+public class RainyOrSunny {
     public static void main(String[] args) {
         //TODO implement your code here...
         Scanner sc = new Scanner(System.in);

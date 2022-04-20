@@ -1,5 +1,7 @@
 package com.java.Test;
 
+import com.java.practice.PracticeMethods;
+
 public class RunEncap {
     public static void main(String args[]) {
         EncapTest moo = new EncapTest();
