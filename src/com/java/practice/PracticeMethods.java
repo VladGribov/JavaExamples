@@ -973,7 +973,7 @@ Note: Math.abs(num) computes the absolute value of a number.
         return -1;
     }
 
-    static int closestPrime(int n) {
+    public int closestPrime(int n) {
         int closest = 0;
         //return 1 if n <= 1
         if (n <= 1) {
@@ -1045,9 +1045,7 @@ Note: Math.abs(num) computes the absolute value of a number.
 
     //main
     public static void main(String[] args) {
-        System.out.println(closestPrime(278355));
-        System.out.println(closestPrime(12345124));
-        System.out.println(closestPrime(-100));
-        System.out.println(closestPrime(Integer.MAX_VALUE));
+        PracticeMethods practice = new PracticeMethods();
+        System.out.println(practice.closestPrime(2));
     }
 }

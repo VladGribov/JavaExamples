@@ -6,6 +6,9 @@ import java.util.List;
 public class Homework16 {
     public List<Integer> find_prime(int n) {
         List<Integer> list = new ArrayList<>();
+        if(n>=1){
+            list.add(1);
+        }
         for (int i = 2; i <= n; i++) {
             boolean isPrime = true;
             for (int x = 2; x <= i - 1; x++) {
