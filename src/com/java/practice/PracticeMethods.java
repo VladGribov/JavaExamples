@@ -959,17 +959,20 @@ Note: Math.abs(num) computes the absolute value of a number.
      * If it does not exist, return -1.
      */
     public int firstUniqChar(String s) {
+        Map<String, Integer> myMap = new LinkedHashMap<>();
         for (int i = 0; i < s.length(); i++) {
-            boolean unique = true;
-            for (int x = i + 1; x < s.length(); x++) {
-                if (s.charAt(i) == s.charAt(x)) {
-                    unique = false;
-                }
+            String ch = String.valueOf(s.charAt(i));
+            if (!myMap.containsKey(ch)) {
+                myMap.put(ch, 1);
+            } else {
+                myMap.put(ch, myMap.get(ch) + 1);
             }
-            if (unique) {
-                return i;
+        }
+        for (Map.Entry<String, Integer> entry : myMap.entrySet()) {
+            if (entry.getValue() == 1) {
+                return s.indexOf(entry.getKey());
             }
-        } //something is wrong with this fix it
+        }
         return -1;
     }
 
@@ -1043,9 +1046,25 @@ Note: Math.abs(num) computes the absolute value of a number.
         return closest;
     }
 
+    /*
+    You are given an integer array height of length n.
+    There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
+    Find two lines that together with the x-axis form a container, such that the container contains the most water.
+    Return the maximum amount of water a container can store.
+    Notice that you may not slant the container.
+     */
+
+    public int maxArea(int[] height) {
+        Map<Integer, Integer> myMap = new HashMap<>();
+        for(int i = 0; i< height.length; i++){
+
+        }
+        return -1;
+    }
+
     //main
     public static void main(String[] args) {
         PracticeMethods practice = new PracticeMethods();
-        System.out.println(practice.closestPrime(2));
+        System.out.println(practice.firstUniqChar("abcvabzcypp"));
     }
 }

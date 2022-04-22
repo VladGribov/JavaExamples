@@ -1,5 +1,7 @@
 package com.java.homework;
 
+import com.java.practice.PracticeMethods;
+
 public class Homework17 {
     //Write a program to print all numbers from 1 to 50 which has more than 5 divisor
     public void div5() {
