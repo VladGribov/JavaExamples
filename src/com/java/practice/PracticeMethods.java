@@ -6,8 +6,7 @@ import java.util.*;
 public class PracticeMethods {
     //Take a string and remove a char at the n'th place
     public String missingChar(String str, int n) {
-        String newStr = str.substring(0, n) + str.substring((n + 1));
-        return newStr;
+        return str.substring(0, n) + str.substring((n + 1));
     }
 
     //Take a string and switch the place of the 1st and last character
@@ -16,8 +15,7 @@ public class PracticeMethods {
             String front = str.substring(0, 1);
             String back = str.substring(str.length() - 1);
             String mid = str.substring(1, str.length() - 1);
-            String newString = back + mid + front;
-            return newString;
+            return back + mid + front;
         } else {
             return str;
         }
@@ -27,8 +25,7 @@ public class PracticeMethods {
     public String front3(String str) {
         if (str.length() >= 3) {
             String snip = str.substring(0, 3);
-            String newStr = snip + snip + snip;
-            return newStr;
+            return snip + snip + snip;
         } else {
             return str + str + str;
         }
@@ -976,6 +973,7 @@ Note: Math.abs(num) computes the absolute value of a number.
         return -1;
     }
 
+    //find the closest prime to a given number
     public int closestPrime(int n) {
         int closest = 0;
         //return 1 if n <= 1
@@ -1046,6 +1044,73 @@ Note: Math.abs(num) computes the absolute value of a number.
         return closest;
     }
 
+    //I'm just keeping this as a reference incase I even need to brush up on maps and lists
+    public int maxAreaTest(int[] height) {
+        //gotta add array to map
+        Map<Integer, Integer> myMap = new HashMap<>();
+        List<Integer> listfw = new ArrayList<>();
+        List<Integer> listbw = new ArrayList<>();
+        for (int i = 0; i < height.length; i++) {
+            myMap.put(i, height[i]);
+        }
+        /*
+        Check from the back and also you don't have the check the same heights from the front again
+        this is the start pilar we don't need to start form the very last one
+        */
+        int fwArea = 0;
+        int bwArea = 0;
+        int area = 0;
+        //this goes forwards
+        for (int i = 0; i < myMap.size(); i++) {
+            int difference = 0;
+            int temp = 0;
+            if (!listfw.contains(myMap.get(i))) { //check if list contains current
+                listfw.add(myMap.get(i)); //add to list
+                for (int x = myMap.size() - 1; x > i; x--) {
+                    if (myMap.get(x) >= myMap.get(i)) {
+                        difference = x - i;
+                        temp = difference * myMap.get(i);
+                        //anything less than pilar won't be checked
+                        //it can also go backwards that's why it's wrong
+                        //and i might have to think of something else for logic
+                        //also needs to ignore concurrent same size pillars
+                        break;
+                    }
+                }
+            }
+            if (temp > fwArea) {
+                fwArea = temp;
+            }
+        }
+        //this one goes backwards
+        for (int i = myMap.size() - 1; i >= 0; i--) {
+            int difference = 0;
+            int temp = 0;
+            if (!listbw.contains(myMap.get(i))) { //check if list contains current
+                listbw.add(myMap.get(i)); //add to list
+                for (int x = 0; x < i; x++) {
+                    if (myMap.get(x) >= myMap.get(i)) {
+                        difference = i - x;
+                        temp = difference * myMap.get(i);
+                        //anything less than pilar won't be checked
+                        //it can also go backwards that's why it's wrong
+                        //and i might have to think of something else for logic
+                        //also needs to ignore concurrent same size pillars
+                        break;
+                    }
+                }
+            }
+            if (temp > bwArea) {
+                bwArea = temp;
+            }
+        }
+        if (fwArea > bwArea) {
+            area = fwArea;
+        } else {
+            area = bwArea;
+        }
+        return area;
+    }
     /*
     You are given an integer array height of length n.
     There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
@@ -1054,17 +1119,104 @@ Note: Math.abs(num) computes the absolute value of a number.
     Notice that you may not slant the container.
      */
 
+    //did this one myself
     public int maxArea(int[] height) {
-        Map<Integer, Integer> myMap = new HashMap<>();
-        for(int i = 0; i< height.length; i++){
-
-        }
-        return -1;
+        //check for larger pillar
+        int xLeft = 0; //x coord (index) of Left pillar
+        int xRight = height.length - 1; //x coord (index) of right pillar
+        int yLeft = height[xLeft]; //y coord (height) of Left pilar
+        int yRight = height[xRight]; //y coord (height) of Right pillar
+        int smallest = 0; // this is the smallest height
+        int area = 0;
+        int newArea = 0;
+        boolean reached = false;
+        boolean reached1 = false;
+        //if area smaller than newArea
+        do {
+            int width = xRight - xLeft;
+            if(reached && reached1){
+                break;
+            }
+            if(yLeft > yRight){
+                smallest = yRight;
+            } else{
+                smallest = yLeft;
+            }
+            if(reached1){
+                smallest = yRight;
+            }
+            if(reached){
+                smallest = yLeft;
+            }
+            if(smallest == yRight && !reached){
+                for(int i = xRight; i >= xLeft; i--){ //for right pillar
+                    if(height[i] > yRight){
+                        yRight = height[i];
+                        xRight = i;
+                        break;
+                    }
+                    if(i == xLeft){
+                        reached = true;
+                    }
+                }
+            } else {
+                for(int i = xLeft; i <= xRight; i++){ //for left pillar
+                    if(height[i] > yLeft){
+                        yLeft = height[i];
+                        xLeft = i;
+                        break;
+                    }
+                    if(xRight == i){
+                        reached1 = true;
+                    }
+                }
+            }
+            newArea = width * smallest;
+            if(newArea > area){
+                area = newArea;
+            }
+        } while(xLeft != xRight);
+        return area;
     }
 
+    //a lot shorter way to do it
+    public int maxAreaShort(int[] height){
+        int area = 0;
+        int i = 0, j = height.length -1;
+        while(i<j){
+            int h = Math.min(height[i], height[j]); //Min height
+            int w = j - i; //width
+            if(height[i] < height[j]){
+                i++;
+            } else {
+                j--;
+            }
+            area = Math.max(area, h*w);
+        }
+        return area;
+    }
+
+    /*
+    Each row must contain the digits 1-9 without repetition.
+    Each column must contain the digits 1-9 without repetition.
+    Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+     */
+    public boolean isValidSudoku(char[][] board) {
+        //not completed
+        return true;
+    }
     //main
     public static void main(String[] args) {
         PracticeMethods practice = new PracticeMethods();
-        System.out.println(practice.firstUniqChar("abcvabzcypp"));
+        char[][] boof = {{'5','3','.','.','7','.','.','.','.'}
+                        ,{'6','.','.','1','9','5','.','.','.'}
+                        ,{'.','9','8','.','.','.','.','6','.'}
+                        ,{'8','.','.','.','6','.','.','.','3'}
+                        ,{'5','.','.','8','.','3','.','.','1'}
+                        ,{'7','.','.','.','2','.','.','.','6'}
+                        ,{'.','6','.','.','.','.','2','8','.'}
+                        ,{'.','.','.','4','1','9','.','.','5'}
+                        ,{'.','.','.','.','8','.','.','7','9'}};
+        System.out.println(practice.isValidSudoku(boof));
     }
 }
