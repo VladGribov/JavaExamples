@@ -38,5 +38,7 @@ public class ArrayListUserDefinedObject {
             System.out.println(now.getName() + " is " + now.getAge());
         }
 
+
+
     }
 }

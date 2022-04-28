@@ -2,6 +2,7 @@ package com.java.practice;
 
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class PracticeMethods {
     //Take a string and remove a char at the n'th place
@@ -332,27 +333,24 @@ public class PracticeMethods {
     //reverse an int and check for overflow
     //if overflow return 0
     //System.out.println(reverse(-1299999999));
-    int reverse(int x) {
-        int reversed = 0;
-        while (Math.abs(x) > 0) {
-            int digit = x % 10;
-
-            if (reversed > Integer.MAX_VALUE / 10) {
+    public int reverse(int x) {
+        int rev = 0;
+        while(Math.abs(x)>0){
+            if (rev > Integer.MAX_VALUE / 10) {
+                System.out.println("Reversed Value too large");
                 return 0;
-            } else if (reversed < Integer.MIN_VALUE / 10) {
+            } else if (rev < Integer.MIN_VALUE / 10) {
+                System.out.println("Reversed Value too small");
                 return 0;
             }
-            int mult = reversed * 10;
-            if (Integer.MAX_VALUE - mult > digit || Integer.MIN_VALUE - mult < digit) {
-                reversed = mult + digit;
-            }
-            x /= 10;
+            rev = rev*10 + x%10;
+            x=x/10;
         }
-        return reversed;
+        return rev;
     }
 
     //square root
-    int mySqrt(int x) {
+    public int mySqrt(int x) {
         for (int i = 0; i < 46341; i++) {
             if (i * i > x) {
                 return i - 1;
@@ -1134,64 +1132,64 @@ Note: Math.abs(num) computes the absolute value of a number.
         //if area smaller than newArea
         do {
             int width = xRight - xLeft;
-            if(reached && reached1){
+            if (reached && reached1) {
                 break;
             }
-            if(yLeft > yRight){
+            if (yLeft > yRight) {
                 smallest = yRight;
-            } else{
+            } else {
                 smallest = yLeft;
             }
-            if(reached1){
+            if (reached1) {
                 smallest = yRight;
             }
-            if(reached){
+            if (reached) {
                 smallest = yLeft;
             }
-            if(smallest == yRight && !reached){
-                for(int i = xRight; i >= xLeft; i--){ //for right pillar
-                    if(height[i] > yRight){
+            if (smallest == yRight && !reached) {
+                for (int i = xRight; i >= xLeft; i--) { //for right pillar
+                    if (height[i] > yRight) {
                         yRight = height[i];
                         xRight = i;
                         break;
                     }
-                    if(i == xLeft){
+                    if (i == xLeft) {
                         reached = true;
                     }
                 }
             } else {
-                for(int i = xLeft; i <= xRight; i++){ //for left pillar
-                    if(height[i] > yLeft){
+                for (int i = xLeft; i <= xRight; i++) { //for left pillar
+                    if (height[i] > yLeft) {
                         yLeft = height[i];
                         xLeft = i;
                         break;
                     }
-                    if(xRight == i){
+                    if (xRight == i) {
                         reached1 = true;
                     }
                 }
             }
             newArea = width * smallest;
-            if(newArea > area){
+            if (newArea > area) {
                 area = newArea;
             }
-        } while(xLeft != xRight);
+        } while (xLeft != xRight);
         return area;
     }
 
     //a lot shorter way to do it
-    public int maxAreaShort(int[] height){
+    public int maxAreaShort(int[] height) {
         int area = 0;
-        int i = 0, j = height.length -1;
-        while(i<j){
+        int i = 0, j = height.length - 1;
+        while (i < j) {
             int h = Math.min(height[i], height[j]); //Min height
             int w = j - i; //width
-            if(height[i] < height[j]){
+            if (height[i] < height[j]) {
                 i++;
             } else {
                 j--;
             }
-            area = Math.max(area, h*w);
+            area = Math.max(area, h * w);
         }
         return area;
     }
@@ -1201,22 +1199,118 @@ Note: Math.abs(num) computes the absolute value of a number.
     Each column must contain the digits 1-9 without repetition.
     Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
      */
+    /*
+    char[][] arr = {{'5', '3', '.', '.', '7', '.', '.', '.', '.'}
+                , {'6', '.', '.', '1', '9', '5', '.', '.', '.'}
+                , {'.', '9', '8', '.', '.', '.', '.', '6', '.'}
+                , {'8', '.', '.', '.', '6', '.', '.', '.', '3'}
+                , {'4', '.', '.', '8', '.', '3', '.', '.', '1'}
+                , {'7', '.', '.', '.', '2', '.', '.', '.', '6'}
+                , {'.', '6', '.', '.', '.', '.', '2', '8', '.'}
+                , {'.', '.', '.', '4', '1', '9', '.', '.', '5'}
+                , {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+     */
     public boolean isValidSudoku(char[][] board) {
-        //not completed
+        //check if row has repeat numbers
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                for (int x = j + 1; x < 9; x++) {
+                    if (board[i][j] == board[i][x] && board[i][j] != '.') {
+                        return false;
+                    }
+                }
+            }
+        }
+        char[] grid = new char[9];
+        char[] column = new char[9];
+        //make a grid and check if it's valid
+        for (int i = 0; i < board.length; i = i + 3) {
+            //i = 0,3,6 rows board[0] board[3] board[6]
+            for (int j = 0; j < board[i].length; j = j + 3) {
+                //j = 0,3,6 split where to start at in a row board[0][0] board[0][3] board[0][6]
+                int count = 0;
+                for (int x = i; x < i + 3; x++) { //0,1,2
+                    for (int y = j; y < j + 3; y++) {//0,1,2
+                        //populate grid array to check for repeat values
+                        grid[count] = board[x][y];
+                        count++;
+                    }
+                }
+                //check if grid contains same numbers
+                for (int x = 0; x < 9; x++) {
+                    for (int y = x + 1; y < 9; y++) {
+                        if (grid[x] == grid[y] && grid[x] != '.') {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        //populate array for column and check if valid
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                column[j] = board[j][i];
+            }
+            //check if it is valid
+            //something here is wrong
+            for (int j = 0; j < 9; j++) {
+                for (int x = j + 1; x < 9; x++) {
+                    if (column[j] == column[x] && column[j] != '.') {
+                        return false;
+                    }
+                }
+            }
+        }
         return true;
     }
+
+    public int[] twoSum1(int[] nums, int target) {
+        int[] arr = {0, 0};
+        int count = 0;
+        int second = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int finalI = i;
+            if(count == 0){
+                if (Arrays.stream(nums, i+1, nums.length).anyMatch(x -> x == target - nums[finalI])){
+                    arr[0] = i;
+                    second = target - nums[i];
+                    count++;
+                }
+            } else {
+                if(nums[i] == second){
+                    arr[1] = i;
+                    break;
+                }
+            }
+        }
+        return arr;
+    }
+    public int[] twoSum2(int[] nums, int target){
+        Map<Integer, Integer> myMap = new HashMap<>();
+        for(int i =0; i < nums.length; i++){
+            if(myMap.containsKey(target- nums[i])){
+                return new int[] {myMap.get(target- nums[i]), i};
+            }
+            myMap.put(nums[i], i);
+        }
+        return null;
+    }
+
     //main
     public static void main(String[] args) {
         PracticeMethods practice = new PracticeMethods();
-        char[][] boof = {{'5','3','.','.','7','.','.','.','.'}
-                        ,{'6','.','.','1','9','5','.','.','.'}
-                        ,{'.','9','8','.','.','.','.','6','.'}
-                        ,{'8','.','.','.','6','.','.','.','3'}
-                        ,{'5','.','.','8','.','3','.','.','1'}
-                        ,{'7','.','.','.','2','.','.','.','6'}
-                        ,{'.','6','.','.','.','.','2','8','.'}
-                        ,{'.','.','.','4','1','9','.','.','5'}
-                        ,{'.','.','.','.','8','.','.','7','9'}};
-        System.out.println(practice.isValidSudoku(boof));
+        int[] arr = {3,2,4};
+        System.out.println(Arrays.toString(practice.twoSum2(arr, 6)));
+        char[][] arr1 = {{'5', '3', '.', '.', '7', '.', '.', '.', '.'}
+                , {'6', '.', '.', '1', '9', '5', '.', '.', '.'}
+                , {'.', '9', '8', '.', '.', '.', '.', '6', '.'}
+                , {'8', '.', '.', '.', '6', '.', '.', '.', '3'}
+                , {'4', '.', '.', '8', '.', '3', '.', '.', '1'}
+                , {'7', '.', '.', '.', '2', '.', '.', '.', '6'}
+                , {'.', '6', '.', '.', '.', '.', '2', '8', '.'}
+                , {'.', '.', '.', '4', '1', '9', '.', '.', '5'}
+                , {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+        System.out.println(practice.isValidSudoku(arr1));
+        System.out.println(practice.reverse(1000000003));
     }
 }
