@@ -1296,9 +1296,61 @@ Note: Math.abs(num) computes the absolute value of a number.
         return null;
     }
 
+    //check if word ends in 'z' or 'y' and count amount of words
+    public int countYZ(String str) {
+        //replace all non characters with spaces
+        //split string
+        String newStr = "";
+        for(int i = 0; i < str.length(); i++){
+            if(Character.isLetter(str.charAt(i))){
+                newStr += str.charAt(i);
+            }else{
+                newStr += " ";
+            }
+        }
+        newStr = newStr.toLowerCase();
+        String[] arr = newStr.split(" ");
+        System.out.println(Arrays.toString(arr));
+        //remove non alphabetic chars
+        for(int i = 0; i < arr.length; i++){
+            String temp = "";
+            for(int j = arr[i].length()- 1; j >=0; j--){
+                if((!Character.isLetter(arr[i].charAt(j)))){
+                    temp = arr[i].substring(0,j);
+                }else if(Character.isLetter(arr[i].charAt(j))){
+                    temp = arr[i].substring(0,j+1);
+                    break;
+                }
+            }
+            arr[i] = temp;
+        }
+        int count = 0;
+        for(int i = 0; i< arr.length; i++){
+            if(!(arr[i].equals("")) && (arr[i].charAt(arr[i].length()-1) == 'y' ||arr[i].charAt(arr[i].length()-1)== 'z')){
+                count++;
+            }
+        }
+        return count;
+    }
+    /*
+    char[][] arr = {{'5', '3', '.', '.', '7', '.', '.', '.', '.'}
+                , {'6', '.', '.', '1', '9', '5', '.', '.', '.'}
+                , {'.', '9', '8', '.', '.', '.', '.', '6', '.'}
+                , {'8', '.', '.', '.', '6', '.', '.', '.', '3'}
+                , {'4', '.', '.', '8', '.', '3', '.', '.', '1'}
+                , {'7', '.', '.', '.', '2', '.', '.', '.', '6'}
+                , {'.', '6', '.', '.', '.', '.', '2', '8', '.'}
+                , {'.', '.', '.', '4', '1', '9', '.', '.', '5'}
+                , {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+     */
+    //Sudoku solver
+    public void solveSudoku(char[][] board) {
+
+    }
     //main
     public static void main(String[] args) {
         PracticeMethods practice = new PracticeMethods();
+        System.out.println(practice.countYZ("Helloz My Namez iz! Vlad@y@"));
         int[] arr = {3,2,4};
         System.out.println(Arrays.toString(practice.twoSum2(arr, 6)));
         char[][] arr1 = {{'5', '3', '.', '.', '7', '.', '.', '.', '.'}
