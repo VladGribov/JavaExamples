@@ -33,9 +33,7 @@ public class ProbabilityFruit {
         int lower = (int)(Math.random() * range1) + min;
         int upper = (int)(Math.random() * range2) + mid;
         int rangeFinal = (upper - lower) + 1;
-        int finalState = (int)(Math.random() * rangeFinal) + lower;
-        amount = finalState;
-
+        amount = (int)(Math.random() * rangeFinal) + lower;
     }
 
 }
