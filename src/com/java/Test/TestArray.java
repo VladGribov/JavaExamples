@@ -2,7 +2,7 @@ package com.java.Test;
 
 import java.util.Arrays;
 
-public class TestArray extends Thread{
+public class TestArray implements Runnable{
     //make an array
 
     //random destribution on an array
@@ -50,11 +50,14 @@ public class TestArray extends Thread{
         return arr;
     }
     public static void main(String[] args) {
-        TestArray thread = new TestArray();
+        //starting a thread in a class that implements Runnable
+        TestArray testArray = new TestArray();
+        Thread thread = new Thread(testArray);
         thread.start();
     }
+    @Override
     public void run() {
-        TestArray testArray = new TestArray();
-        testArray.printStrArr(testArray.randArray(35));
+        TestArray thread = new TestArray();
+        thread.printStrArr(thread.randArray(35));
     }
 }

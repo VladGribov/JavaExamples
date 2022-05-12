@@ -1,19 +1,19 @@
 package com.java.practice;
 
-import java.lang.reflect.Array;
+
 import java.util.Arrays;
 
 public class SudokuSolver {
-    public void solveSudoku(char[][] board) {
-        class print{
-            public void print(){
-                for(int j = 0; j< board.length; j++){
-                    System.out.println(Arrays.toString(board[j]));
-                }
-                System.out.println();
-            }
+    public void print(char[][] board) {
+        for (char[] chars : board) {
+            System.out.println(Arrays.toString(chars));
         }
-        new print().print();
+        System.out.println();
+    }
+
+    public char[][] solveSudoku(char[][] board) {
+        char[][] original = board;
+        print(board);
         /*
         Legend:
         '.' = empty slot
@@ -99,7 +99,6 @@ public class SudokuSolver {
                             boolean found = false;
                             boolean exit = false;
                             int count = 0;
-                            int count1 = 0;
                             int row = 0;
                             int pos = 0;
                             //check rows
@@ -276,34 +275,146 @@ public class SudokuSolver {
                 }
             }//this is the end of the loop for choosing which number we check
             boolean hasDot = false;
-            for(int i = 0; i < board.length; i++){
-                for(int j = 0; j< board[i].length; j++){
-                    if(board[i][j] == '.'){
+            for (int i = 0; i < board.length; i++) {
+                for (int j = 0; j < board[i].length; j++) {
+                    if (board[i][j] == '.') {
                         hasDot = true;
+                        break;
                     }
                 }
             }
-            /*if(Arrays.deepEquals(arr, board) && hasDot){
-                System.out.println("No solution");
-                printOut = false;
-                repeat = false;
-            }*/
+            if (Arrays.deepEquals(arr, board) && hasDot) {
+                //if the board is valid guess otherwise return original
+                if (isValidSudoku(board)) {
+                    return board;
+                } else {
+                    return original;
+                }
+
+            }
             if (Arrays.deepEquals(arr, board)) {
                 repeat = false;
             }
             for (int i = 0; i < 9; i++) {
                 for (int j = 0; j < 9; j++) {
-                    arr[i][j]= board[i][j];
+                    arr[i][j] = board[i][j];
                 }
             }
         }
         //print out the board
-        if(printOut){
-            new print().print();
+        if (printOut) {
+            print(board);
+        }
+        return board;
+    }
+
+    //find 3x3 with smallest amount of empty squares and test values
+    public char[][] guess(char[][] board) {
+        char[][] copy = board;
+        for (int i = 1; i <= 9; i++) {
+            char myChar = (char) (i + '0');
+            for (int j = 0; j < 9; j++) {
+                for (int k = 0; k < 9; k++) {
+                    if (board[j][k] == '.') {
+                        board[j][k] = myChar;
+                        if (isValidSudoku(board)) {
+                            solveSudoku(board);
+                        } else {
+                            board[j][k] = '.';
+                        }
+                    }
+                }
+            }
+        }
+        return board;
+    }
+
+    public boolean isValidSudoku(char[][] board) {
+        //check if row has repeat numbers
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                for (int x = j + 1; x < 9; x++) {
+                    if (board[i][j] == board[i][x] && board[i][j] != '.') {
+                        return false;
+                    }
+                }
+            }
+        }
+        char[] grid = new char[9];
+        char[] column = new char[9];
+        //make a grid and check if it's valid
+        for (int i = 0; i < board.length; i = i + 3) {
+            //i = 0,3,6 rows board[0] board[3] board[6]
+            for (int j = 0; j < board[i].length; j = j + 3) {
+                //j = 0,3,6 split where to start at in a row board[0][0] board[0][3] board[0][6]
+                int count = 0;
+                for (int x = i; x < i + 3; x++) { //0,1,2
+                    for (int y = j; y < j + 3; y++) {//0,1,2
+                        //populate grid array to check for repeat values
+                        grid[count] = board[x][y];
+                        count++;
+                    }
+                }
+                //check if grid contains same numbers
+                for (int x = 0; x < 9; x++) {
+                    for (int y = x + 1; y < 9; y++) {
+                        if (grid[x] == grid[y] && grid[x] != '.') {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        //populate array for column and check if valid
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                column[j] = board[j][i];
+            }
+            //check if it is valid
+            //something here is wrong
+            for (int j = 0; j < 9; j++) {
+                for (int x = j + 1; x < 9; x++) {
+                    if (column[j] == column[x] && column[j] != '.') {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public void solver(char[][] board) {
+        while (isValidSudoku(board)) {
+            board = solveSudoku(board);
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    if(board[i][j] == '.'){
+                        guess(board);
+                        break;
+                    } else if(i == 8 && j == 8 && board[i][j] != '.'){
+                        print(board);
+                    }
+                }
+            }
+        }
+        if (!isValidSudoku(board)) {
+            System.out.println("No solution");
         }
     }
 
     public static void main(String[] args) {
+/*
+        char[][] arr = {{'5', '3', '.', '.', '7', '.', '.', '.', '.'}
+                , {'6', '.', '.', '1', '9', '5', '.', '.', '.'}
+                , {'.', '9', '8', '.', '.', '.', '.', '6', '.'}
+                , {'8', '.', '.', '.', '6', '.', '.', '.', '3'}
+                , {'4', '.', '.', '8', '.', '3', '.', '.', '1'}
+                , {'7', '.', '.', '.', '2', '.', '.', '.', '6'}
+                , {'.', '6', '.', '.', '.', '.', '2', '8', '.'}
+                , {'.', '.', '.', '4', '1', '9', '.', '.', '5'}
+                , {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+ */
+
 
        /*char[][] arr = {{'.', '.', '9', '7', '4', '8', '.', '.', '.'}
                 , {'7', '.', '.', '.', '.', '.', '.', '.', '.'}
@@ -314,10 +425,10 @@ public class SudokuSolver {
                 , {'.', '.', '.', '8', '.', '3', '.', '2', '.'}
                 , {'.', '.', '.', '.', '.', '.', '.', '.', '6'}
                 , {'.', '.', '.', '2', '7', '5', '9', '.', '1'}};
+                */
 
-        */
 
-       /*char[][] arr = {{'.', '.', '9', '7', '4', '8', '.', '.', '.'}
+        char[][] arr = {{'.', '.', '9', '7', '4', '8', '.', '.', '.'}
                 , {'7', '.', '.', '.', '.', '.', '.', '.', '.'}
                 , {'.', '2', '.', '1', '.', '9', '.', '.', '.'}
                 , {'.', '.', '7', '.', '.', '.', '2', '4', '.'}
@@ -326,28 +437,7 @@ public class SudokuSolver {
                 , {'.', '.', '.', '8', '.', '3', '.', '2', '.'}
                 , {'.', '.', '.', '.', '.', '.', '.', '.', '6'}
                 , {'.', '.', '.', '2', '7', '5', '9', '.', '.'}};
+        new SudokuSolver().solver(arr);
 
-        */
-
-
-
-
-
-       char[][] arr = {{'5', '3', '.', '.', '7', '.', '.', '.', '.'}
-                , {'6', '.', '.', '1', '9', '5', '.', '.', '.'}
-                , {'.', '9', '8', '.', '.', '.', '.', '6', '.'}
-                , {'8', '.', '.', '.', '6', '.', '.', '.', '3'}
-                , {'4', '.', '.', '8', '.', '3', '.', '.', '1'}
-                , {'7', '.', '.', '.', '2', '.', '.', '.', '6'}
-                , {'.', '6', '.', '.', '.', '.', '2', '8', '.'}
-                , {'.', '.', '.', '4', '1', '9', '.', '.', '5'}
-                , {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
-
-
-
-
-
-
-        new SudokuSolver().solveSudoku(arr);
     }
 }
