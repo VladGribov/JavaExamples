@@ -4,6 +4,10 @@ package com.java.practice;
 import java.util.Arrays;
 
 public class SudokuSolver {
+    static int boof;
+    void a(){
+        System.out.println(boof);
+    }
     public void print(char[][] board) {
         for (char[] chars : board) {
             System.out.println(Arrays.toString(chars));
@@ -13,7 +17,6 @@ public class SudokuSolver {
 
     public char[][] solveSudoku(char[][] board) {
         char[][] original = board;
-        print(board);
         /*
         Legend:
         '.' = empty slot
@@ -274,16 +277,7 @@ public class SudokuSolver {
                     }
                 }
             }//this is the end of the loop for choosing which number we check
-            boolean hasDot = false;
-            for (int i = 0; i < board.length; i++) {
-                for (int j = 0; j < board[i].length; j++) {
-                    if (board[i][j] == '.') {
-                        hasDot = true;
-                        break;
-                    }
-                }
-            }
-            if (Arrays.deepEquals(arr, board) && hasDot) {
+            if (Arrays.deepEquals(arr, board) && checkDot(board)) {
                 //if the board is valid guess otherwise return original
                 if (isValidSudoku(board)) {
                     return board;
@@ -295,36 +289,120 @@ public class SudokuSolver {
             if (Arrays.deepEquals(arr, board)) {
                 repeat = false;
             }
-            for (int i = 0; i < 9; i++) {
-                for (int j = 0; j < 9; j++) {
-                    arr[i][j] = board[i][j];
-                }
-            }
-        }
-        //print out the board
-        if (printOut) {
-            print(board);
+            arr = copy(board);
         }
         return board;
     }
 
-    //find 3x3 with smallest amount of empty squares and test values
-    public char[][] guess(char[][] board) {
-        char[][] copy = board;
+    public boolean checkDot(char[][] board) {
+        boolean dot = false;
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                if (board[i][j] == '.') {
+                    dot = true;
+                    break;
+                }
+            }
+        }
+        return dot;
+    }
+
+    public char[][] copy(char[][] board) {
+        char[][] copyOf = new char[9][9];
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                copyOf[i][j] = board[i][j];
+            }
+        }
+        return copyOf;
+    }
+
+    public boolean isSolvable(char[][] board) {
+        //this would be very usefull
+        //check if the given board is solvable
+        //if it is solve it
+        return false;
+    }
+
+    public void solve(char[][] board) {
         for (int i = 1; i <= 9; i++) {
-            char myChar = (char) (i + '0');
+
+        }
+    }
+    //stable copy
+    /*
+    public char[][] guess(char[][] board) {
+        char[][] arr = new char[9][9];
+        board = solveSudoku(board);
+        char[][] original = copy(board);
+        while (isValidSudoku(board) && checkDot(board)) {
+            if (Arrays.deepEquals(arr, board) && checkDot(board)) {
+                board = copy(original);
+                print(board);
+            }
+            arr = copy(board);
+            System.out.println(isValidSudoku(board));
             for (int j = 0; j < 9; j++) {
                 for (int k = 0; k < 9; k++) {
                     if (board[j][k] == '.') {
-                        board[j][k] = myChar;
-                        if (isValidSudoku(board)) {
-                            solveSudoku(board);
-                        } else {
-                            board[j][k] = '.';
+                        for (int i = 1; i <= 9; i++) {
+                            char myChar = (char) (i + '0');
+                            board[j][k] = myChar;
+                            if (isValidSudoku(solveSudoku(board))) {
+                                board = solveSudoku(board);
+
+                                print(board);
+                                break;
+                            } else {
+                                board[j][k] = '.';
+                            }
                         }
                     }
                 }
             }
+        }
+        if (!isValidSudoku(board)) {
+            System.out.println("No solution");
+            print(board);
+        }
+        return board;
+    }
+     */
+
+    //find 3x3 with smallest amount of empty squares and test values
+    public char[][] guess(char[][] board) {
+        char[][] arr = new char[9][9];
+        board = solveSudoku(board);
+        char[][] original = copy(board);
+        while (isValidSudoku(board) && checkDot(board)) {
+            if (Arrays.deepEquals(arr, board) && checkDot(board)) {
+                board = copy(original);
+                print(board);
+            }
+            arr = copy(board);
+            System.out.println(isValidSudoku(board));
+            for (int j = 0; j < 9; j++) {
+                for (int k = 0; k < 9; k++) {
+                    if (board[j][k] == '.') {
+                        for (int i = 1; i <= 9; i++) {
+                            char myChar = (char) (i + '0');
+                            board[j][k] = myChar;
+                            if (isValidSudoku(solveSudoku(board))) {
+                                board = solveSudoku(board);
+
+                                print(board);
+                                break;
+                            } else {
+                                board[j][k] = '.';
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (!isValidSudoku(board)) {
+            System.out.println("No solution");
+            print(board);
         }
         return board;
     }
@@ -371,7 +449,6 @@ public class SudokuSolver {
                 column[j] = board[j][i];
             }
             //check if it is valid
-            //something here is wrong
             for (int j = 0; j < 9; j++) {
                 for (int x = j + 1; x < 9; x++) {
                     if (column[j] == column[x] && column[j] != '.') {
@@ -383,28 +460,9 @@ public class SudokuSolver {
         return true;
     }
 
-    public void solver(char[][] board) {
-        while (isValidSudoku(board)) {
-            board = solveSudoku(board);
-            for (int i = 0; i < 9; i++) {
-                for (int j = 0; j < 9; j++) {
-                    if(board[i][j] == '.'){
-                        guess(board);
-                        break;
-                    } else if(i == 8 && j == 8 && board[i][j] != '.'){
-                        print(board);
-                    }
-                }
-            }
-        }
-        if (!isValidSudoku(board)) {
-            System.out.println("No solution");
-        }
-    }
-
     public static void main(String[] args) {
-/*
-        char[][] arr = {{'5', '3', '.', '.', '7', '.', '.', '.', '.'}
+
+        /*char[][] arr = {{'5', '3', '.', '.', '7', '.', '.', '.', '.'}
                 , {'6', '.', '.', '1', '9', '5', '.', '.', '.'}
                 , {'.', '9', '8', '.', '.', '.', '.', '6', '.'}
                 , {'8', '.', '.', '.', '6', '.', '.', '.', '3'}
@@ -412,8 +470,8 @@ public class SudokuSolver {
                 , {'7', '.', '.', '.', '2', '.', '.', '.', '6'}
                 , {'.', '6', '.', '.', '.', '.', '2', '8', '.'}
                 , {'.', '.', '.', '4', '1', '9', '.', '.', '5'}
-                , {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
- */
+                , {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};*/
+
 
 
        /*char[][] arr = {{'.', '.', '9', '7', '4', '8', '.', '.', '.'}
@@ -437,7 +495,7 @@ public class SudokuSolver {
                 , {'.', '.', '.', '8', '.', '3', '.', '2', '.'}
                 , {'.', '.', '.', '.', '.', '.', '.', '.', '6'}
                 , {'.', '.', '.', '2', '7', '5', '9', '.', '.'}};
-        new SudokuSolver().solver(arr);
+       new SudokuSolver().guess(arr);
 
     }
 }

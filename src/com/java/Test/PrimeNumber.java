@@ -1,27 +1,13 @@
 package com.java.Test;
 
-import java.util.*;
+import com.java.class20.PrintNumber;
 
-interface AdvancedArithmetic{
-    int divisor_sum(int n);
-    void find_prime(int n);
-}
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-//Write your code here
-class MyCalculator implements AdvancedArithmetic{
-@Override
-    public int divisor_sum(int n){
-        int num = 0;
-        for(int i = n; i>0; i--){
-            if(n%i == 0){
-                num +=i;
-            }
-        }
-        return num;
-    }
-    //print out prime numbers below the inputted value
-    @Override
-    public void find_prime(int n){
+public class PrimeNumber {
+    public void findPrime(int n) {
         List<Integer> list = new ArrayList<>();
         list.add(1);
         list.add(2);
@@ -41,10 +27,8 @@ class MyCalculator implements AdvancedArithmetic{
         }
         System.out.println(list);
     }
-}
-public class InterfaceTest {
+
     public static void main(String[] args) {
-        MyCalculator calc = new MyCalculator();
-        calc.find_prime(500000);
+        new PrimeNumber().findPrime(100);
     }
 }

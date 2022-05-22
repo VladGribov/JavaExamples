@@ -1346,7 +1346,14 @@ Note: Math.abs(num) computes the absolute value of a number.
                 , {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
      */
     //Sudoku solver
+    public void print(char[][] board){
+        for(int j = 0; j< board.length; j++){
+            System.out.println(Arrays.toString(board[j]));
+        }
+        System.out.println();
+    }
     public void solveSudoku(char[][] board) {
+        print(board);
         /*
         Legend:
         '.' = empty slot
@@ -1358,27 +1365,16 @@ Note: Math.abs(num) computes the absolute value of a number.
         //then check special rules where 2+ in one grid in a row or column are possibly
         //then all in that row or column are not
         //then check if any possible number locations
-        boolean modify = false;//checks if the array was modified
-        boolean checkNum = false;
-        boolean repeat = true;
         char[][] arr = new char[9][9];
+        boolean modify;//checks if the array was modified
+        boolean repeat = true;
+        boolean printOut = true;
         while (repeat) {
             repeat = false;
-            for (int i = 0; i < 9; i++) {
-                for (int j = 0; j < 9; j++) {
-                    if (board[i][j] == '-' || board[i][j] == '+') {
-                        board[i][j] = '.';
-                    }
-                }
-            }
-            out:
-            for (int i = 1; i <= 1; i++) {//1-9 check each number one by 1
+            for (int i = 1; i <= 9; i++) {//1-9 check each number one by 1
                 char myChar = (char) (i + '0');
-                System.out.println(myChar);
                 do {
-                    if (!checkNum) {
-                        modify = false;
-                    }
+                    modify = false;
                     //check row then column of found row, later check grid
                     for (int j = 0; j < 9; j++) {//row 0,1,2,3,4,5,6,7,8
                         for (int k = 0; k < 9; k++) {//check individual locations in row for i
@@ -1443,6 +1439,7 @@ Note: Math.abs(num) computes the absolute value of a number.
                             boolean found = false;
                             boolean exit = false;
                             int count = 0;
+                            int count1 = 0;
                             int row = 0;
                             int pos = 0;
                             //check rows
@@ -1515,7 +1512,7 @@ Note: Math.abs(num) computes the absolute value of a number.
                             }
                         }
                     }
-                    //check grid if only 1 '+' change to i
+                    //check grid if only 1 '-' change to i
                     for (int j = 0; j < 7; j += 3) {
                         for (int k = 0; k < 7; k += 3) {
                             int count = 0;
@@ -1544,13 +1541,10 @@ Note: Math.abs(num) computes the absolute value of a number.
                             if (count == 1) {
                                 board[row][pos] = myChar;
                                 modify = true;
-                                System.out.println("grid");
-                                repeat = true;
-                                break out;
                             }
                         }
                     }
-                    //check pillar if only 1 '+' change to i
+                    //check pillar if only 1 '-' change to i
                     for (int j = 0; j < 9; j++) {
                         int count = 0;
                         int pillar = 0;
@@ -1559,6 +1553,7 @@ Note: Math.abs(num) computes the absolute value of a number.
                         for (int k = 0; k < 9; k++) {
                             if (board[k][j] == myChar) {
                                 found = true;
+                                break;
                             }
                         }
                         if (!found) {
@@ -1573,12 +1568,9 @@ Note: Math.abs(num) computes the absolute value of a number.
                         if (count == 1) {
                             board[pillar][pos] = myChar;
                             modify = true;
-                            System.out.println("pillar");
-                            repeat = true;
-                            break out;
                         }
                     }
-                    //check row if only 1 '+' change to i
+                    //check row if only 1 '-' change to i
                     for (int j = 0; j < 9; j++) {
                         int count = 0;
                         int row = 0;
@@ -1587,6 +1579,7 @@ Note: Math.abs(num) computes the absolute value of a number.
                         for (int k = 0; k < 9; k++) {
                             if (board[j][k] == myChar) {
                                 found = true;
+                                break;
                             }
                         }
                         if (!found) {
@@ -1601,9 +1594,6 @@ Note: Math.abs(num) computes the absolute value of a number.
                         if (count == 1) {
                             board[row][pos] = myChar;
                             modify = true;
-                            System.out.println("row");
-                            repeat = true;
-                            break out;
                         }
                     }
                 } while (modify);
@@ -1615,46 +1605,48 @@ Note: Math.abs(num) computes the absolute value of a number.
                         }
                     }
                 }
-                for (int j = 0; j < 9; j++) {
-                    for (int k = 0; k < 9; k++) {
-                        System.out.print(board[j][k]);
-                    }
-                    System.out.println();
-                }
-                System.out.println();
                 //if we're at the last number check if any '-' are left if not break, else loop
                 for (int j = 0; j < 9; j++) {
                     for (int k = 0; k < 9; k++) {
                         if (board[j][k] == '.') {
                             repeat = true;
+                            break;
                         }
                     }
                 }
-                if (arr == board) {
-                    repeat = false;
-                }
-                for (int j = 0; j < 9; j++) {
-                    for (int k = 0; k < 9; k++) {
-                        arr[j][k]= board[j][k];
+            }//this is the end of the loop for choosing which number we check
+            boolean hasDot = false;
+            for(int i = 0; i < board.length; i++){
+                for(int j = 0; j< board[i].length; j++){
+                    if(board[i][j] == '.'){
+                        hasDot = true;
                     }
                 }
-
-            }//this is the end of the loop for choosing which number we check
+            }
+            if(Arrays.deepEquals(arr, board) && hasDot){
+                System.out.println("No solution");
+                printOut = false;
+                repeat = false;
+            }
+            if (Arrays.deepEquals(arr, board)) {
+                repeat = false;
+            }
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    arr[i][j]= board[i][j];
+                }
+            }
         }
         //print out the board
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                System.out.print(board[i][j]);
-            }
-            System.out.println();
+        if(printOut){
+            print(board);
         }
-        System.out.println();
     }
 
     //main
     public static void main(String[] args) {
         PracticeMethods practice = new PracticeMethods();
-        char[][] arr = {{'.', '.', '9', '7', '4', '8', '.', '.', '.'}
+        /*char[][] arr = {{'.', '.', '9', '7', '4', '8', '.', '.', '.'}
                 , {'7', '.', '.', '.', '.', '.', '.', '.', '.'}
                 , {'.', '2', '.', '1', '.', '9', '.', '.', '.'}
                 , {'.', '.', '7', '.', '.', '.', '2', '4', '.'}
@@ -1662,8 +1654,18 @@ Note: Math.abs(num) computes the absolute value of a number.
                 , {'.', '9', '8', '.', '.', '.', '3', '.', '.'}
                 , {'.', '.', '.', '8', '.', '3', '.', '2', '.'}
                 , {'.', '.', '.', '.', '.', '.', '.', '.', '6'}
-                , {'.', '.', '.', '2', '7', '5', '9', '.', '1'}};
-        System.out.println(practice.isValidSudoku(arr));
+                , {'.', '.', '.', '2', '7', '5', '9', '.', '.'}};*/
+
+        char[][] arr = {{'5', '3', '.', '.', '7', '.', '.', '.', '.'}
+                , {'6', '.', '.', '1', '9', '5', '.', '.', '.'}
+                , {'.', '9', '8', '.', '.', '.', '.', '6', '.'}
+                , {'8', '.', '.', '.', '6', '.', '.', '.', '3'}
+                , {'4', '.', '.', '8', '.', '3', '.', '.', '1'}
+                , {'7', '.', '.', '.', '2', '.', '.', '.', '6'}
+                , {'.', '6', '.', '.', '.', '.', '2', '8', '.'}
+                , {'.', '.', '.', '4', '1', '9', '.', '.', '5'}
+                , {'.', '.', '.', '.', '8', '.', '.', '7', '9'}};
+        practice.solveSudoku(arr);
 
         /*for (int j = 0; j < 7; j += 3) {//0,3,6
             for (int k = 0; k < 7; k += 3) {//board[0][0], board[0][3], board[0][6]
